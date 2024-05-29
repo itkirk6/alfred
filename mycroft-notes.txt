@@ -1,0 +1,38 @@
+Burn the Raspberry Pi OS image: Raspberry Pi OS Lite 64-bit
+enable ssh if neccessary
+
+
+sudo apt-get update
+sudo apt-get install -y git curl
+sh -c "curl -s https://raw.githubusercontent.com/OpenVoiceOS/ovos-installer/main/installer.sh -o installer.sh && chmod +x installer.sh && sudo ./installer.sh && rm installer.sh"
+we strongly recommend to use the “virtualenv” method
+
+now it should be installed
+
+Your Mycroft services are running under the OVOS virtual environment with the following processes:
+ovos-messagebus
+ovos_PHAL
+ovos_PHAL_admin
+ovos-dinkum-listener
+ovos-core
+ovos-audio
+ovos-ggwave-listener
+
+Typically, starting the core service should initialize other dependent services:
+ovos-core
+(services are automatically started on startup)
+
+Restart Mycroft NOT WORKING METHOD
+source ~/.venvs/ovos/bin/activate
+ovos-core
+
+Since you already have the log paths, you can monitor the logs to see how each component is performing:
+Voice Log: tail -f /home/pi/.local/state/mycroft/voice.log
+Bus Log: tail -f /home/pi/.local/state/mycroft/bus.log
+Skills Log: tail -f /home/pi/.local/state/mycroft/skills.log
+PHAL Log: tail -f /home/pi/.local/state/mycroft/phal.log
+OVOS Log: tail -f /home/pi/.local/state/mycroft/ovos.log
+Audio Log: tail -f /home/pi/.local/state/mycroft/audio.log
+
+Skills:
+cd ~/.config/mycroft/skills
