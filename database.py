@@ -14,7 +14,7 @@ class Database:
     def getList(self):
         return pd.read_csv(settings.pathToPersonalList)
 
-
+    #functions to save different inventorys
     def saveInventory(self,df):
         df.to_csv(settings.pathToInventory, index=False)
     

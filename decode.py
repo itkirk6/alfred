@@ -1,7 +1,7 @@
 
 class Decode:
     def __init__(self,command):
-        value = self.decodeCommand(command)
+        self.value = self.decodeCommand(command)
     
     #command should look like this -> add 3 oranges / remove 1 milk / ate 2 steak / 
     def decodeCommand(self,command): # returns data to captured, [str commandName,str itemName,int ammount] or False
