@@ -3,10 +3,9 @@ import datetime
 import pandas as pd
 
 class Database:
-
     def __init__(self):
         pass
-    
+
     def getInventory(self):
         return pd.read_csv(settings.pathToInventory)
 
@@ -161,11 +160,3 @@ class Database:
         
         dfCombined = pd.concat([self.getList(),self.generateInventoryList()], ignore_index=True)
         self.saveShoppingList(dfCombined.drop_duplicates(subset=['Name']))
-
-
-
-
-
-        
-    
-    
