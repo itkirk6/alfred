@@ -1,4 +1,3 @@
-#speechrecognition,LINUX python3-pyaudio, WINDOWS pyaudio,pyttsx3,
 import speech_recognition as sr
 import tts
 import decode
