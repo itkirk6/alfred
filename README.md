@@ -13,6 +13,6 @@ sudo mv /usr/lib/python3.11/EXTERNALLY-MANAGED /usr/lib/python3.11/EXTERNALLY-MA
 
 install python packages:
 ```
-sudo apt-get install python-pyaudio SpeechRecognition pyttsx3
+pip install pyaudio SpeechRecognition pyttsx3
 
 ```

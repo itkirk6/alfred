@@ -1,30 +1,27 @@
 import database
+from settings import number_words
 
 db = database.Database()
 
 
 class Command:
-    def __init__(self, condition, action):
-        self.condition = condition
+    def __init__(self, description, returnValue, action):
+        self.description = description
+        self.returnValue = returnValue
         self.action = action
 
-    def execute(self):
-        self.action()
-
-
-
-# conditions
-addItem = ".*\badd\b.*"  # "... add ..."
-removeItem = "(?:remove|take off|get rid of|(?:i|we) don't want)"
-justAte = "(?:i\s+just\s+ate|just\s+ate|i\s+ate|just\s+had|i\s+had)"
-addInventoryQuantity = "(?:i\s+bought\s+some\s+more|i\s+bought\s+.*?\s+more|i\s+bought|(?:we|i)\s+have\s+.*?\s+more|(?:we|i)\s+got\s+.*?)"
+    def execute(self, *args):
+        return self.action(*args)
 
 
 
 commands = [
-    Command(addItem, db.addItem),
-    Command(removeItem, db.removeItem),
-    Command(justAte, db.justAte),
-    Command(addInventoryQuantity, db.addInventoryQuantity)
-    
+    Command("Add item to inventory", ["item"], db.addItem),
+    Command("Remove item from inventory", ["item"], db.removeItem),
+    Command("Consumed/used some item", ["item", "int: amount"], db.justAte),
+    #Command("", db.addInventoryQuantity),
+    Command("Going shopping or needs shopping list", [], db.goShopping),
+    Command("Coming back from a shopping trip or has receipt", [], db.wentShopping),
+    Command("Ran out of some item", ["item"], db.ranOut)
 ]
+

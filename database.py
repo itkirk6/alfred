@@ -28,19 +28,19 @@ class Database:
         df.to_csv(settings.pathToShoppingList, index=False)
 
     # adds new item to inventory inventory
-    def addItem(self, name, amount): #returns string
+    def addItem(self, name): #returns string
             
         df = self.getInventory()
         print(df)
 
         try:
             if(not df.isin([name.lower()]).any().any()):
-                df = df._append({'Name':name.lower(),'amount':amount}, ignore_index=True)
+                df = df._append({'Name':name.lower(),'amount':0}, ignore_index=True)
                 
                 self.saveInventory(df)
                 #df.to_csv(settings.pathToInventory, index=False)
 
-                return f"{name.lower()} added with amount {amount}"
+                return f"{name.lower()} added with amount {0}"
             else:
                 raise ValueError(f"{name.lower()} already exists in inventory, nothing added")
         
@@ -141,7 +141,7 @@ class Database:
             print(e)
     
     #generates shopping list based on inventory
-    def generateInventoryList(self):
+    def generateInventoryList(self, _):
         
         inventoryDF     = self.getInventory()
         inventoryListDF = self.getInventoryList()
@@ -155,7 +155,15 @@ class Database:
         return inventoryListDF
     
     #concats PERSONAL list and Inventory list then drops duplicates
-    def goShopping(self):    
+    def goShopping(self, _):    
         
         dfCombined = pd.concat([self.getList(),self.generateInventoryList()], ignore_index=True)
         self.saveShoppingList(dfCombined.drop_duplicates(subset=['Name']))
+
+    def wentShopping(self, data):
+        #data = {"item": amount, ...}
+        pass
+
+    def ranOut(self, name):
+        pass
+        #sets amount to 0
