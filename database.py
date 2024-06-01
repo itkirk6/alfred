@@ -72,7 +72,6 @@ class Database:
 
         df = self.getInventory()
         try:
-
             if name.lower() in df["Name"].values:
                 
                 df.loc[df['Name'] == name.lower(), 'Ammount'] -= ammount
@@ -105,7 +104,7 @@ class Database:
                 return f"{name.lower()} increased by {ammount}"
             else:
                 raise ValueError(f"{name} not in inventory, nothing changed")
-        
+            
         except Exception as e:
             print(e)
 
