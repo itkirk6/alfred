@@ -13,3 +13,12 @@ pathToPersonalList = os.path.join(db,"personalList.csv")
 pathToInventoryList = os.path.join(db,"inventoryList.csv")
 pathToShoppingList  = os.path.join(db, "shoppingList.csv")
 
+#takes string and removes anything before substring
+def stripBeforeSubstring(inputString, subString):
+      pos = inputString.find(subString)
+
+      if pos!= -1:
+            return inputString[pos:]
+      else:
+            return inputString
+
