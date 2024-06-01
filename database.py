@@ -28,19 +28,19 @@ class Database:
         df.to_csv(settings.pathToShoppingList, index=False)
 
     # adds new item to inventory inventory
-    def addItem(self, name, ammount): #returns string
+    def addItem(self, name, amount): #returns string
             
         df = self.getInventory()
         print(df)
 
         try:
             if(not df.isin([name.lower()]).any().any()):
-                df = df._append({'Name':name.lower(),'Ammount':ammount}, ignore_index=True)
+                df = df._append({'Name':name.lower(),'amount':amount}, ignore_index=True)
                 
                 self.saveInventory(df)
                 #df.to_csv(settings.pathToInventory, index=False)
 
-                return f"{name.lower()} added with ammount {ammount}"
+                return f"{name.lower()} added with amount {amount}"
             else:
                 raise ValueError(f"{name.lower()} already exists in inventory, nothing added")
         
@@ -67,41 +67,41 @@ class Database:
         except Exception as e:
             print(e)
     
-    # reduces inventory quantity by ammount
-    def justAte(self, name, ammount):
+    # reduces inventory quantity by amount
+    def justAte(self, name, amount):
 
         df = self.getInventory()
         try:
             if name.lower() in df["Name"].values:
                 
-                df.loc[df['Name'] == name.lower(), 'Ammount'] -= ammount
+                df.loc[df['Name'] == name.lower(), 'amount'] -= amount
                 
-                df['Ammount'] = df['Ammount'].clip(lower=0)
+                df['amount'] = df['amount'].clip(lower=0)
                 
                 self.saveInventory(df)
                 
-                return f"{name.lower()} reduced by {ammount}"
+                return f"{name.lower()} reduced by {amount}"
             else:
                 raise ValueError(f"{name} not in inventory, nothing changed")
             
         except Exception as e:
             print(e)
     
-    # increases inventory quantity by ammount
-    def addInventoryQuantity(self,name, ammount):
+    # increases inventory quantity by amount
+    def addInventoryQuantity(self,name, amount):
         df = self.getInventory()
 
         try:
 
             if name.lower() in df["Name"].values:
                 
-                df.loc[df['Name'] == name.lower(), 'Ammount'] += ammount
+                df.loc[df['Name'] == name.lower(), 'amount'] += amount
                 
-                df['Ammount'] = df['Ammount'].clip(lower=0)
+                df['amount'] = df['amount'].clip(lower=0)
                 
                 self.saveInventory(df)
                 
-                return f"{name.lower()} increased by {ammount}"
+                return f"{name.lower()} increased by {amount}"
             else:
                 raise ValueError(f"{name} not in inventory, nothing changed")
             
@@ -113,11 +113,11 @@ class Database:
         df = self.getList()
         try:
             if(not name.lower() in df["Name"].values):
-                df = df._append({'Name':name.lower(),'Ammount':1}, ignore_index=True)
+                df = df._append({'Name':name.lower(),'amount':1}, ignore_index=True)
 
                 self.saveList(df)
 
-                return f"{name.lower()} added to shopping list with ammount {1}"
+                return f"{name.lower()} added to shopping list with amount {1}"
             else:
                 raise ValueError(f"{name.lower()} already exists on list, nothing added")
         
@@ -146,7 +146,7 @@ class Database:
         inventoryDF     = self.getInventory()
         inventoryListDF = self.getInventoryList()
 
-        zeroQtyItems = inventoryDF[inventoryDF['Ammount']==0]
+        zeroQtyItems = inventoryDF[inventoryDF['amount']==0]
 
 
         inventoryListDF = pd.concat([inventoryListDF,zeroQtyItems], ignore_index=True)
