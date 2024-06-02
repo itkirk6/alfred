@@ -50,17 +50,19 @@ Do not print or give me anything other than this explicit format I asked for.
 
         if msg == "False":
             return False
-        """
-        try:
+         try:
             #index = int(msg.split(",")[0])
-
-            argument = ",".join([x.strip() for x in msg.split(",")[1:]]).replace("[", "").replace("]", "").replace('"', "")
-            args = argument.split(",")
-
-            return args
+            msg = msg.replace('"','').replace("'", '').replace(" ", '').replace('[','').replace(']','')
+            msg = msg.split(',',1)
+            msg[1] = msg[1].split(',')
+            
+            if msg[1] == ['']:
+                msg[1] = []
+            print(f"return value 1 -> {msg[0]}, return value 2-> {msg[1]}")
+            return msg[0], msg[1]
 
         except Exception as e:
             print(e)
             print(msg)
-            return False"""
+            return False
         
