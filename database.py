@@ -35,7 +35,7 @@ class Database:
 
         try:
             if(not df.isin([name.lower()]).any().any()):
-                df = df._append({'Name':name.lower(),'amount':0}, ignore_index=True)
+                df = df._append({'name':name.lower(),'amount':0}, ignore_index=True)
                 
                 self.saveInventory(df)
                 #df.to_csv(settings.pathToInventory, index=False)
@@ -56,9 +56,9 @@ class Database:
 
         try:
 
-            if(name.lower() in df["Name"].values):
+            if(name.lower() in df["name"].values):
                 
-                df = df[df['Name'] != name.lower()]
+                df = df[df['name'] != name.lower()]
                 
                 self.saveInventory(df)
                 #df.to_csv(settings.pathToInventory,index=False)
@@ -75,9 +75,9 @@ class Database:
 
         df = self.getInventory()
         try:
-            if name.lower() in df["Name"].values:
+            if name.lower() in df["name"].values:
                 
-                df.loc[df['Name'] == name.lower(), 'amount'] -= amount
+                df.loc[df['name'] == name.lower(), 'amount'] -= amount
                 
                 df['amount'] = df['amount'].clip(lower=0)
                 
@@ -98,9 +98,9 @@ class Database:
 
         try:
 
-            if name.lower() in df["Name"].values:
+            if name.lower() in df["name"].values:
                 
-                df.loc[df['Name'] == name.lower(), 'amount'] = amount
+                df.loc[df['name'] == name.lower(), 'amount'] = amount
                 self.saveInventory(df)
                 
                 return True
@@ -116,8 +116,8 @@ class Database:
     def addToList(self,name):
         df = self.getList()
         try:
-            if(not name.lower() in df["Name"].values):
-                df = df._append({'Name':name.lower(),'amount':1}, ignore_index=True)
+            if(not name.lower() in df["name"].values):
+                df = df._append({'name':name.lower(),'amount':1}, ignore_index=True)
 
                 self.saveList(df)
 
@@ -135,9 +135,9 @@ class Database:
 
         try:
 
-            if(name.lower() in df["Name"].values):
+            if(name.lower() in df["name"].values):
                 
-                df = df[df['Name'] != name.lower()]
+                df = df[df['name'] != name.lower()]
                 
                 self.saveList(df)
                 return f"{name.lower()} removed from list"

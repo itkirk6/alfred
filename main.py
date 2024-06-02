@@ -12,8 +12,9 @@ def main():
     d = decide.Decider()
     
     while(True):
+        print("Listening now")
         text = audioInput.getInput()
-
+        
         
         try:
                
