@@ -1,7 +1,12 @@
 import re
 from commands import commands
 from openai import OpenAI
-client = OpenAI()
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=key)
 
 class Decider:
     def __init__(self):
