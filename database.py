@@ -40,12 +40,13 @@ class Database:
                 self.saveInventory(df)
                 #df.to_csv(settings.pathToInventory, index=False)
 
-                return f"{name.lower()} added with amount {0}"
+                return True
             else:
                 raise ValueError(f"{name.lower()} already exists in inventory, nothing added")
         
         except Exception as e:
             print(e)
+            return False
     
 
     # removes item from inventory
@@ -61,14 +62,16 @@ class Database:
                 
                 self.saveInventory(df)
                 #df.to_csv(settings.pathToInventory,index=False)
-                return f"{name.lower()} removed from inventory"
+                return True
             else:
                 raise ValueError(f"{name.lower()} does not exist in inventory, nothing removed")
         except Exception as e:
             print(e)
+            return False
     
     # reduces inventory quantity by amount
     def justAte(self, name, amount):
+        amount = int(amount)
 
         df = self.getInventory()
         try:
@@ -80,34 +83,35 @@ class Database:
                 
                 self.saveInventory(df)
                 
-                return f"{name.lower()} reduced by {amount}"
+                return True
             else:
                 raise ValueError(f"{name} not in inventory, nothing changed")
             
         except Exception as e:
             print(e)
+            return False
     
     # increases inventory quantity by amount
-    def addInventoryQuantity(self,name, amount):
+    def setInventoryQuantity(self, name, amount):
+        amount = int(amount)
         df = self.getInventory()
 
         try:
 
             if name.lower() in df["Name"].values:
                 
-                df.loc[df['Name'] == name.lower(), 'amount'] += amount
-                
-                df['amount'] = df['amount'].clip(lower=0)
-                
+                df.loc[df['Name'] == name.lower(), 'amount'] = amount
                 self.saveInventory(df)
                 
-                return f"{name.lower()} increased by {amount}"
+                return True
             else:
                 raise ValueError(f"{name} not in inventory, nothing changed")
             
         except Exception as e:
             print(e)
+            return False
 
+    """
     #adds item to PERSONAL shopping list
     def addToList(self,name):
         df = self.getList()
@@ -117,12 +121,14 @@ class Database:
 
                 self.saveList(df)
 
-                return f"{name.lower()} added to shopping list with amount {1}"
+                return True
             else:
                 raise ValueError(f"{name.lower()} already exists on list, nothing added")
         
         except Exception as e:
             print(e)
+            return False
+    
     #removes item from PERSONAL shopping list
     def removeFromList(self,name):
         df = self.getList()
@@ -139,30 +145,30 @@ class Database:
                 raise ValueError(f"{name.lower()} does not exist in list, nothing removed")
         except Exception as e:
             print(e)
-    
-    #generates shopping list based on inventory
-    def generateInventoryList(self, _):
-        
+    """
+
+    def goShopping(self, _):
         inventoryDF     = self.getInventory()
         inventoryListDF = self.getInventoryList()
 
-        zeroQtyItems = inventoryDF[inventoryDF['amount']==0]
+        zeroQtyItems = inventoryDF[inventoryDF['amount']<=0]
 
 
         inventoryListDF = pd.concat([inventoryListDF,zeroQtyItems], ignore_index=True)
 
         self.saveInventoryList(inventoryListDF)
-        return inventoryListDF
-    
-    #concats PERSONAL list and Inventory list then drops duplicates
-    def goShopping(self, _):    
-        
-        dfCombined = pd.concat([self.getList(),self.generateInventoryList()], ignore_index=True)
-        self.saveShoppingList(dfCombined.drop_duplicates(subset=['Name']))
+        # somehow print this: inventoryListDF
+        print(inventoryListDF)
 
-    def wentShopping(self, data):
-        #data = {"item": amount, ...}
+
+        return True# if it worked
+
+
+
+    def wentShopping(self, total):
         pass
+
+
 
     def ranOut(self, name):
         pass

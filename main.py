@@ -5,7 +5,7 @@ import stt
 import decide
 
 from processText import processText
-from commands import commands
+import commands
 
 def main():
     audioInput = stt.AudioInput()
@@ -22,8 +22,19 @@ def main():
                         processedText = processText(text)
                         output = d.decide(processedText)
                         if output:
-                            command, args = output
-                            command.execute(*args)  #this function parses text as well
+                            keyword, args = output
+
+                            command = command.findCommand(keyword)
+
+                            result = command.execute(*args)  #this function parses text as well
+
+                            if result:
+                                pass
+                                 
+
+
+
+                        
                         
         except Exception as e:
             print(e)
