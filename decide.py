@@ -50,7 +50,7 @@ Do not print or give me anything other than this explicit format I asked for.
 
         if msg == "False":
             return False
-         try:
+        try:
             #index = int(msg.split(",")[0])
             msg = msg.replace('"','').replace("'", '').replace(" ", '').replace('[','').replace(']','')
             msg = msg.split(',',1)
