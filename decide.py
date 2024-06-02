@@ -1,28 +1,23 @@
 import re
-from commands import commands
+import commands
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
-key = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key=key)
+api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=api_key)
 
 class Decider:
     def __init__(self):
-        self.commands = commands
+        self.commands = commands.commands
 
     def decide(self, input_string):
-        descriptions = [f"index: {x}, {commands[x].description}, {commands[x].returnValue}" for x in range(len(commands))]
+        descriptions = [f"keyword: {key}, {self.commands[key].description}, {self.commands[key].returnValue}\n" for key in commands.commands.keys()]
         #print(descriptions)
         prompt = f"""
 I have a list of command descriptions and their corresponding return values. Here are the descriptions:
-keyword: add, Add item to inventory, ['item name']
-keyword: remove, Remove item from inventory, ['item name']
-keyword: used, Consumed/used some item, ['item name', 'int: amount']
-keyword: shop, Going shopping or needs shopping list, []
-keyword: receipt, Coming back from a shopping trip or has receipt, []
-keyword: out, Ran out of some item, ['item name']
+{"".join(descriptions)}
 
 Given the following prompt:
 {input_string}
@@ -42,8 +37,10 @@ Do not print or give me anything other than this explicit format I asked for.
                     {"role": "user", "content": prompt}
                 ]
             )
-        except:
-            print("ChatGPT Error")
+        except Exception as e:
+            print(e)
+            print("Error calling ChatGPT")
+            return False
     
         msg = completion.choices[0].message.content
         print(msg)
@@ -64,5 +61,5 @@ Do not print or give me anything other than this explicit format I asked for.
         except Exception as e:
             print(e)
             print(msg)
-            return False
+            return Falses
         

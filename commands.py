@@ -5,8 +5,7 @@ db = database.Database()
 
 
 class Command:
-    def __init__(self, keyword, description, returnValue, action, response):
-        self.keyword = keyword
+    def __init__(self, description, returnValue, action, response):
         self.description = description
         self.returnValue = returnValue
         self.action = action

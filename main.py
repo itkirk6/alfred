@@ -9,10 +9,11 @@ import commands
 
 def main():
     audioInput = stt.AudioInput()
+    d = decide.Decider()
     
     while(True):
         text = audioInput.getInput()
-        d = decide.Decider()
+
         
         try:
                
@@ -21,15 +22,17 @@ def main():
                         print(text)
                         processedText = processText(text)
                         output = d.decide(processedText)
+                        print(0)
                         if output:
+                            print("1")
                             keyword, args = output
-
-                            command = command.findCommand(keyword)
-
-                            result = command.execute(*args)  #this function parses text as well
-
-                            if result:
-                                pass
+                            print(2)
+                            command = commands.commands[keyword]
+                            print(3)
+                            result = command.execute(*args)
+                            print(4)
+                            print(result)
+                            print(5)
                                  
 
 
