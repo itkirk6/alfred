@@ -25,6 +25,8 @@ Given the following prompt:
 Give me the keyword of the description it most matches, and fill in the return value with the data from the prompt it needs.
 This should be in the format: keyword,returnValue
 The item name should not include a number, if the amount is not listed that is extraneous information.
+if adding inventory the amount should default to 0 unless otherwise specified.
+It the item is given as plural, make it singular.
 If the prompt does not seem to match any of the descriptions, print False.
 Do not print or give me anything other than this explicit format I asked for.
 """

@@ -1,13 +1,16 @@
 import settings
 import datetime
 import pandas as pd
+import random
+import outputChoices
+import printer
 
 class Database:
     def __init__(self):
         pass
 
     def getInventory(self):
-        return pd.read_csv(settings.pathToInventory)
+        return pd.read_csv(settings.pathToInventory, dtype={"amount": int})
 
     def getInventoryList(self):
         return pd.read_csv(settings.pathToInventoryList)    
@@ -28,25 +31,25 @@ class Database:
         df.to_csv(settings.pathToShoppingList, index=False)
 
     # adds new item to inventory inventory
-    def addItem(self, name): #returns string
+    def addItem(self, name, amount): #returns string
             
         df = self.getInventory()
         print(df)
 
         try:
             if(not df.isin([name.lower()]).any().any()):
-                df = df._append({'name':name.lower(),'amount':0}, ignore_index=True)
+                df = df._append({'name':name.lower(),'amount': amount}, ignore_index=True)
                 
                 self.saveInventory(df)
                 #df.to_csv(settings.pathToInventory, index=False)
 
-                return True
+                return f"Got it! I added {name}s to your inventory."
             else:
-                raise ValueError(f"{name.lower()} already exists in inventory, nothing added")
+                return f"{name}s already exist in your inventory, nothing added"
         
         except Exception as e:
             print(e)
-            return False
+            return "There was an error adding your item to the inventory."
     
 
     # removes item from inventory
@@ -62,12 +65,12 @@ class Database:
                 
                 self.saveInventory(df)
                 #df.to_csv(settings.pathToInventory,index=False)
-                return True
+                return f"Success! Removed {name} from the inventory."
             else:
-                raise ValueError(f"{name.lower()} does not exist in inventory, nothing removed")
+                return f"{name} does not exist in inventory, nothing removed"
         except Exception as e:
             print(e)
-            return False
+            return "There was an error removing your item from the inventory."
     
     # reduces inventory quantity by amount
     def justAte(self, name, amount):
@@ -76,20 +79,23 @@ class Database:
         df = self.getInventory()
         try:
             if name.lower() in df["name"].values:
-                
+                #print(type(df.loc[df['name'] == name.lower(), 'amount'].values[0]))
                 df.loc[df['name'] == name.lower(), 'amount'] -= amount
                 
                 df['amount'] = df['amount'].clip(lower=0)
                 
                 self.saveInventory(df)
                 
-                return True
+                if random.random() > 0.5:
+                    return f"Noted. you now have {df.loc[df['name'] == name.lower(), 'amount'].iloc[0]} {name}."
+                else:
+                    return random.choice(outputChoices.ateItem)
             else:
-                raise ValueError(f"{name} not in inventory, nothing changed")
+                return(f"{name} is not in your inventory, nothing changed")
             
         except Exception as e:
             print(e)
-            return False
+            return "There was an error interfacing with your inventory."
     
     # increases inventory quantity by amount
     def setInventoryQuantity(self, name, amount):
@@ -101,15 +107,16 @@ class Database:
             if name.lower() in df["name"].values:
                 
                 df.loc[df['name'] == name.lower(), 'amount'] = amount
+                #df['amount'] = df['amount'].clip(lower=0)
                 self.saveInventory(df)
                 
-                return True
+                return f"Gotcha. You now have {amount} {name}s."
             else:
-                raise ValueError(f"{name} not in inventory, nothing changed")
+                return f"{name} is not in your inventory, nothing changed"
             
         except Exception as e:
             print(e)
-            return False
+            return "There was an error interfacing with your inventory."
 
     """
     #adds item to PERSONAL shopping list
@@ -147,21 +154,29 @@ class Database:
             print(e)
     """
 
-    def goShopping(self, _):
+    def goShopping(self, wantsRead):
         inventoryDF     = self.getInventory()
         inventoryListDF = self.getInventoryList()
 
-        zeroQtyItems = inventoryDF[inventoryDF['amount']<=0]
+        zeroQtyItems = inventoryDF[inventoryDF['amount']==0]
 
 
-        inventoryListDF = pd.concat([inventoryListDF,zeroQtyItems], ignore_index=True)
+        #inventoryListDF = pd.concat([inventoryListDF,zeroQtyItems], ignore_index=True)
 
-        self.saveInventoryList(inventoryListDF)
-        # somehow print this: inventoryListDF
-        print(inventoryListDF)
+        #self.saveInventoryList(inventoryListDF)
+        if wantsRead == "False":
+            # somehow print this: inventoryListDF
+            printer.printShoppingList(zeroQtyItems)
+            return "OK! I have printed your shopping list."
+        
+        else:
+            inventoryItemsSpeech = ' '.join(zeroQtyItems['name'])
+            inventorySpeech = f"Here is your shopping list: {inventoryItemsSpeech}"
 
+            if random.random() < 0.5:
+                inventorySpeech += f". You should maybe cut down on the {inventoryListDF['name'].sample().iloc[0]}s since they are gross."
 
-        return True# if it worked
+            return inventorySpeech
 
 
 
@@ -171,5 +186,4 @@ class Database:
 
 
     def ranOut(self, name):
-        pass
-        #sets amount to 0
+        return self.setInventoryQuantity(name, "0")

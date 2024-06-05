@@ -3,8 +3,9 @@ import audio
 import database
 import stt
 import decide
+import tts
 
-from processText import processText
+import processText
 import commands
 
 def main():
@@ -21,19 +22,16 @@ def main():
             if("alfred" in text):
                         text = settings.stripBeforeSubstring(text,"alfred").replace("alfred","").strip()
                         print(text)
-                        processedText = processText(text)
+                        processedText = processText.processText(text)
                         output = d.decide(processedText)
-                        print(0)
                         if output:
-                            print("1")
                             keyword, args = output
-                            print(2)
                             command = commands.commands[keyword]
-                            print(3)
                             result = command.execute(*args)
-                            print(4)
                             print(result)
-                            print(5)
+
+                            tts.textToSpeech(result)
+
                                  
 
 

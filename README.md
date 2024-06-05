@@ -13,6 +13,6 @@ sudo mv /usr/lib/python3.11/EXTERNALLY-MANAGED /usr/lib/python3.11/EXTERNALLY-MA
 
 install python packages:
 ```
-pip install pandas openai pyaudio SpeechRecognition pyttsx3 python-dotenv
+pip install pandas openai pyaudio SpeechRecognition pyttsx3 python-dotenv setuptools pywin32
 
 ```
